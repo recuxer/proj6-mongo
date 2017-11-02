@@ -65,8 +65,6 @@ except:
     print("Failure opening database.  Is Mongo running? Correct password?")
     sys.exit(1)
 
-
-
 ###
 # Pages
 ###
@@ -78,6 +76,7 @@ def index():
   g.memos = get_memos()
   for memo in g.memos: 
       app.logger.debug("Memo: " + str(memo))
+  memo
   return flask.render_template('index.html')
 
 
@@ -86,10 +85,12 @@ def jstest():
     return flask.render_template('jstest.html')
 
 # We don't have an interface for creating memos yet
-# @app.route("/create")
-# def create():
-#     app.logger.debug("Create")
-#     return flask.render_template('create.html')
+@app.route("/create", methods=["POST"])
+def create():
+     app.logger.debug("Create")
+     memo = flask.request.form["memo"]
+     print(memo)
+     return flask.redirect(flask.url_for("index"))
 
 
 @app.errorhandler(404)

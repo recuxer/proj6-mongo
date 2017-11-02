@@ -54,11 +54,11 @@
 {% else %}
   <p>No memos for you. </p>  
 {% endif %}
-<form id="entry">
-  <textarea name="memo" rows="15" cols="30">
+<form id="entry" method="POST" action="/create">
+  <textarea name="memo" id="memo" rows="15" cols="30">
 </textarea>
   <br>
-  <input type="submit">
+  <input type="submit" name="memo">
 </form>  
 
 </div> <!-- container -->

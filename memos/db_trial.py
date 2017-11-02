@@ -14,6 +14,13 @@ import sys
 import config
 CONFIG = config.configuration()
 
+"""
+DB_USER = userjohn
+DB_USER_PW = wiW5B
+DB_HOST = ds044689.mlab.com
+DB_PORT = 44689
+DB = amemodb
+"""
 MONGO_CLIENT_URL = "mongodb://{}:{}@{}:{}/{}".format(
     CONFIG.DB_USER,
     CONFIG.DB_USER_PW,
@@ -29,6 +36,8 @@ try:
     print("Got database")
     collection = db.dated
     print("Using sample collection")
+    print (db)
+    print (collection)
 except Exception as err:
     print("Failed")
     print(err)
