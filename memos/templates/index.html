@@ -18,12 +18,12 @@
 </script>
 
    <!-- Our own style sheet -->
-   <link rel="stylesheet" href="/static/css/memos.css" />
+  <!-- <link rel="stylesheet" href="/static/css/memos.css" /> -->
 
 
 </head>
 <body>
-<div class="container">
+<div class="container" style"width: 100%">
 
 <!-- Flashed messages before content -->
 {% with messages = get_flashed_messages() %}
@@ -36,12 +36,31 @@
   {% endif %}
 {% endwith %}
 
-<h1>Memos</h1>
+<div id="entermemo" style="display: none">
+  <h1>Enter New Memo</h1><br>
+  <form id="entry" method="POST" action="/create">
+    <div class="row">
+      <label for="date">Time: </label>
+      <input type=date name="date" value="YYYY-MM-DD"><input type=time name="time" value="00:00">
+    </div><br>
+    <div class="row">
+      <textarea name="memo" id="memo" rows="10" style="width: 50%;"></textarea>
+    </div><br>
+    <input type="submit" name="memo" value="Submit Memo">
+  </form>
+</div>
+<br><button class="slidedown" style="position: center">Enter Memo</button>
 
+<h2>Memos</h2>
+
+<form id="remove" method="POST" action="/remove">
 {% if g.memos %}
     {% for memo in g.memos %}
   <div class="memo">
   <div class="row">
+  <div class="col-md-1">
+    <button type=submit name="removememo" value="{{ memo.date }}">Remove</button>
+  </div>
   <div class="col-md-2">
     {{ memo.date | humanize }}
   </div>
@@ -49,18 +68,20 @@
     {{ memo.text }}
   </div>
   </div> <!-- row -->
-  </div> <!-- memo -->
+  </div><br> <!-- memo -->
   {% endfor %}
 {% else %}
   <p>No memos for you. </p>  
 {% endif %}
-<form id="entry" method="POST" action="/create">
-  <textarea name="memo" id="memo" rows="15" cols="30">
-</textarea>
-  <br>
-  <input type="submit" name="memo">
-</form>  
+</form>
+<script>
+$(document).ready(function(){
+    $(".slidedown").click(function(){
+        $("#entermemo").slideDown();
+     });
+});
+</script>
 
-</div> <!-- container -->
+</div> 
 </body>
 </html>

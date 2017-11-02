@@ -17,10 +17,8 @@ from flask import g
 from flask import render_template
 from flask import request
 from flask import url_for
-
-import json
+#import json
 import logging
-
 import sys
 
 # Date handling 
@@ -33,7 +31,6 @@ from pymongo import MongoClient
 import config
 CONFIG = config.configuration()
 
-
 MONGO_CLIENT_URL = "mongodb://{}:{}@{}:{}/{}".format(
     CONFIG.DB_USER,
     CONFIG.DB_USER_PW,
@@ -41,9 +38,7 @@ MONGO_CLIENT_URL = "mongodb://{}:{}@{}:{}/{}".format(
     CONFIG.DB_PORT, 
     CONFIG.DB)
 
-
 print("Using URL '{}'".format(MONGO_CLIENT_URL))
-
 
 ###
 # Globals
@@ -72,26 +67,39 @@ except:
 @app.route("/")
 @app.route("/index")
 def index():
-  app.logger.debug("Main page entry")
-  g.memos = get_memos()
-  for memo in g.memos: 
-      app.logger.debug("Memo: " + str(memo))
-  memo
-  return flask.render_template('index.html')
+    app.logger.debug("Main page entry")
+    g.memos = get_memos()
+    for memo in g.memos: 
+        app.logger.debug("Memo: " + str(memo))
+  
+    return flask.render_template('index.html')
 
-
-@app.route("/jstest")
-def jstest():
-    return flask.render_template('jstest.html')
 
 # We don't have an interface for creating memos yet
 @app.route("/create", methods=["POST"])
 def create():
-     app.logger.debug("Create")
-     memo = flask.request.form["memo"]
-     print(memo)
-     return flask.redirect(flask.url_for("index"))
+    app.logger.debug("Create")
+    memo = flask.request.form["memo"]
+    datetime = flask.request.form["date"] + ' ' + flask.request.form["time"]
+    memotime = arrow.get(datetime, 'YYYY-MM-DD HH:mm')
+    newmemo = { "type": "dated_memo",
+                "date": memotime.naive,
+                "text": memo
+              }
+    print('added memo with date: ' + str(newmemo["date"]))
+    collection.insert(newmemo)
+     
+    return flask.redirect(flask.url_for("index"))
 
+#@app.route("/submit_memo", methods=["POST"])
+#def submit_memo(): 
+@app.route("/remove", methods=["POST"])
+def remove():
+    app.logger.debug("Remove")
+    memodate = arrow.get(flask.request.form["removememo"]).naive
+    collection.delete_one({ "date": memodate })
+    print('removing memo with date: ' + str(memodate))
+    return flask.redirect(flask.url_for("index")) 
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -144,6 +152,8 @@ def get_memos():
         record['date'] = arrow.get(record['date']).isoformat()
         del record['_id']
         records.append(record)
+        print('memo dates: ' + record['date'])
+    #print(records)
     return records 
 
 
