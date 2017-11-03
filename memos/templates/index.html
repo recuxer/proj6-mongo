@@ -15,17 +15,17 @@
    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
    <script
     src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-</script>
+   </script>
 
    <!-- Our own style sheet -->
-  <!-- <link rel="stylesheet" href="/static/css/memos.css" /> -->
-
+  <link rel="stylesheet" href="/static/css/memos.css" />
 
 </head>
 <body>
 <div class="container" style"width: 100%">
 
 <!-- Flashed messages before content -->
+<br>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -36,23 +36,25 @@
   {% endif %}
 {% endwith %}
 
+<!-- div to hide create memo -->
 <div id="entermemo" style="display: none">
   <h1>Enter New Memo</h1><br>
   <form id="entry" method="POST" action="/create">
     <div class="row">
-      <label for="date">Time: </label>
-      <input type=date name="date" value="YYYY-MM-DD"><input type=time name="time" value="00:00">
+      <label for="date">Date/Time:</label>
+      <input type=date name="date"><input type=time name="time">
     </div><br>
     <div class="row">
-      <textarea name="memo" id="memo" rows="10" style="width: 50%;"></textarea>
+      <textarea name="memo" id="memo" rows="10" style="width: 40%;"></textarea>
     </div><br>
     <input type="submit" name="memo" value="Submit Memo">
   </form>
 </div>
-<br><button class="slidedown" style="position: center">Enter Memo</button>
+<br><button class="slidedown" style="position: center">Click to Toggle Create Memo Field</button>
 
+<!-- output memos -->
 <h2>Memos</h2>
-
+<p>Earliest Memos First</p>
 <form id="remove" method="POST" action="/remove">
 {% if g.memos %}
     {% for memo in g.memos %}
@@ -74,12 +76,16 @@
   <p>No memos for you. </p>  
 {% endif %}
 </form>
+
 <script>
+
+//animate hidden div to create memo
 $(document).ready(function(){
     $(".slidedown").click(function(){
-        $("#entermemo").slideDown();
+        $("#entermemo").slideToggle();
      });
 });
+
 </script>
 
 </div> 
