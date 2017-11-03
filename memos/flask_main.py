@@ -82,10 +82,15 @@ def page_not_found(error):
 @app.route("/create", methods=["POST"])
 def create():
     app.logger.debug("Create")
+    
+    #form variables called before concat for error checking
     memo = flask.request.form["memo"]
-    cur_datetime = flask.request.form["date"] + ' ' + flask.request.form["time"]
+    date = flask.request.form["date"]
+    time = flask.request.form["time"]
+    cur_datetime = date + ' ' + time
+    
     #if user didn't enter required fields
-    if not memo or cur_datetime == ' ':
+    if not memo or not date or not time:
         error = "memo not created. date, time, and memo field can't be empty!"
         flash(error)
     else:
