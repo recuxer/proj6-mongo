@@ -58,7 +58,7 @@
 <form id="remove" method="POST" action="/remove">
 {% if g.memos %}
     {% for memo in g.memos %}
-  <div class="memo">
+  <div class="memo" style="border-style: double;">
   <div class="row">
   <div class="col-md-1">
     <button type=submit name="removememo" value="{{ memo.date }}">Remove</button>
