@@ -1,5 +1,7 @@
-##Tests##
+# Tests
+
 Tests include:
+
 Logic of sort by date
 
 To run tests, type:
